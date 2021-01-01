@@ -14,6 +14,7 @@ stage ('Build')
 {
 sh "${mavenHome}/bin/mvn clean package"
 }
+ 
  /*
 stage ('execute sonarqube report')
 {
@@ -40,5 +41,6 @@ mail bcc: 'nithinbhumi@gmail.com', body: '''build is sucessed
 Regards,
 Nithin''', cc: 'nithinbhumi@gmail.com,matrixroboo@gmail.com', from: '', replyTo: '', subject: 'build sucessed', to: 'nithinbhumi@gmail.com'
 }
+ 
  */
 }
