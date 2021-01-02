@@ -2,12 +2,11 @@ node
 {
 properties([[$class: 'JiraProjectProperty'], buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '3', daysToKeepStr: '', numToKeepStr: '3')), [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
 
-def mavenHome = tool name : "maven-3.6.3"
+def mavenHome = tool name: "maven-3.6.3"
 
 stage ('checkoutcode')
 {
-git branch: 'development', credentialsId: '19b32700-a93a-41eb-8e8b-f0878160879e', 
-url: 'https://github.com/nithindevopsmt/maven-web-application.git'
+git branch: 'development', credentialsId: '19b32700-a93a-41eb-8e8b-f0878160879e', url: 'https://github.com/nithindevopsmt/maven-web-application.git'
 }
 
 stage ('Build')
@@ -30,7 +29,7 @@ stage ('Deploy Tomcat')
 {
 sshagent(['3c5247b0-6bef-4137-8a33-9335a821b2f7'])
 {
-sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@13.235.247.79:/opt/apache-tomcat-9.0.41/webapps"
+sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@13.235.247.79:/opt/apache-tomcat-9.0.41/webapps/"
 
 }
 
