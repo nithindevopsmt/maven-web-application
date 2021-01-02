@@ -30,8 +30,13 @@ stage ('Deploy Tomcat')
 sshagent(['3c5247b0-6bef-4137-8a33-9335a821b2f7'])
 {
 sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@13.235.247.79:/opt/apache-tomcat-9.0.41/webapps/"
-
 }
+}
+stage('Send Email Notifications')
+{
+mail bcc: 'nithindevopsmt@gmail.com', body: '''Build Sucess
 
+Regards,
+DevopsTeam''', cc: 'nithindevopsmt@gmail.com', from: '', replyTo: '', subject: 'Build Sucess', to: 'nithindevopsmt@gmail.com'
 }
 }
