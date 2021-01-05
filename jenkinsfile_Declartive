@@ -1,0 +1,62 @@
+pipeline {
+ agent any
+  tools {
+  maven 'maven-3.6.3'
+   }
+   
+   triggers {
+       pollSCM ('* * * * *')
+   }
+
+ stages {
+  stage('checkout code'){
+   steps {
+      git branch: 'development', credentialsId: '19b32700-a93a-41eb-8e8b-f0878160879e', url: 'https://github.com/nithindevopsmt/maven-web-application.git'    
+        }
+      }
+
+  
+  stage('Build'){
+    steps {
+      sh 'mvn clean package'
+     }
+    }
+    
+   stage('sonar report'){
+    steps {
+      sh 'mvn sonar:sonar'
+     }
+    } 
+    
+    stage('upload nexus'){
+    steps {
+      sh 'mvn deploy'
+     }
+    }
+    
+    stage('deploy tomcat'){
+    steps {
+    sshagent(['3c5247b0-6bef-4137-8a33-9335a821b2f7']) {
+    sh 'scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@65.1.1.62:/opt/apache-tomcat-9.0.41/webapps/'
+	}
+    }
+  }
+ }
+
+
+post {
+ 
+  success {
+    mail bcc: 'nithindevopsmt@gmail.com', body: '''Build-over 
+	Regards,
+	NITHINROYAL''', cc: 'nithindevopsmt@gmail.com', from: '', replyTo: '', subject: 'build-over-sucess', to: 'nithindevopsmt@gmail.com' 
+   }
+ failure {
+	mail bcc: 'nithindevopsmt@gmail.com', body: '''Build-over 
+Regards,
+NITHINROYAL''', cc: 'nithindevopsmt@gmail.com', from: '', replyTo: '', subject: 'build-over-failure', to: 'nithindevopsmt@gmail.com'
+}
+
+
+}
+}
